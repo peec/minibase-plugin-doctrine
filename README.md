@@ -1,15 +1,13 @@
-# Twig Plugin for Minibase
+# Doctrine ORM for Minibase
 
-Enables Twig based templates. Uses the same interface as Minibase offers for 
-rendering normal PHP views.
-
+Enables you to integrate Doctrine to Minibase.
 
 ## Install
 
 ```json
 {
   "require":{
-	     "pkj/minibase-plugin-twig": "dev-master"
+	     "pkj/minibase-plugin-doctrine": "dev-master"
 	}
 }
 
@@ -17,22 +15,35 @@ rendering normal PHP views.
 
 ## Setup
 
-Setup global view path, we need to know where twig templates are located.
-
-```php
-$mb->setConfig(MB::CFG_VIEWPATH, __DIR__ . '/views');
-```
-
 Init the plugin
 
 ```php
 $mb->initPlugins(array(
-	'Pkj\Minibase\Plugin\TwigPlugin\TwigPlugin' => array(
-		// Where to store the compiled php templates.		
-		'cache' => __DIR__ . '/template_compilation_cache'
+	'Pkj\Minibase\Plugin\DoctrinePlugin\DoctrinePlugin' => array(
+		'metadata' => 'annotation', // yaml,xml or annotation.
+		'entityDirs' => __DIR__ . '/Models', // Entity dirs.
+		'connection' => array(
+			'driver' => 'pdo_sqlite',
+    			'path' => __DIR__ . '/db.sqlite',
+		),
+		// Optional callback to configure the Configuration object.
+		setupCallback: function () {
+			// $this = Doctrine Configuration object instance.
+		}
 	)
 ));
 ```
 
-Start using twig templates.
+
+## Use in controllers
+
+The plugin makes "em" available as a plugin in your MB app.
+
+
+From any controller:
+
+```php
+$this->mb->em->persist(new SomeModel());
+```
+
 
