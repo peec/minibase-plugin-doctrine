@@ -21,7 +21,7 @@ Init the plugin
 $mb->initPlugins(array(
 	'Pkj\Minibase\Plugin\DoctrinePlugin\DoctrinePlugin' => array(
 		'metadata' => 'annotation', // yaml,xml or annotation.
-		'entityDirs' => __DIR__ . '/Models', // Entity dirs.
+		'entityDirs' => [__DIR__ . '/Models'], // Entity dirs.
 		'connection' => array(
 			'driver' => 'pdo_sqlite',
     			'path' => __DIR__ . '/db.sqlite',

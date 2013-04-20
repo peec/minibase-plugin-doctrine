@@ -43,12 +43,34 @@ class DoctrinePlugin extends Plugin{
 		
 		
 		
-		$this->cliListener = function (Application $console) {			
+		$this->cliListener = function (Application $console) {
 			$helperSet = new \Symfony\Component\Console\Helper\HelperSet(array(
 				'db' => new \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper($this->mb->em->getConnection()),
-				'em' => new \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper($this->mb->em)
+					'em' => new \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper($this->mb->em)
 			));
 			$console->setHelperSet($helperSet);
+			$console->addCommands(array(
+					// DBAL Commands
+					new \Doctrine\DBAL\Tools\Console\Command\RunSqlCommand(),
+					new \Doctrine\DBAL\Tools\Console\Command\ImportCommand(),
+
+					// ORM Commands
+					new \Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand(),
+					new \Doctrine\ORM\Tools\Console\Command\ClearCache\ResultCommand(),
+					new \Doctrine\ORM\Tools\Console\Command\ClearCache\QueryCommand(),
+					new \Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand(),
+					new \Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand(),
+					new \Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand(),
+					new \Doctrine\ORM\Tools\Console\Command\EnsureProductionSettingsCommand(),
+					new \Doctrine\ORM\Tools\Console\Command\ConvertDoctrine1SchemaCommand(),
+					new \Doctrine\ORM\Tools\Console\Command\GenerateRepositoriesCommand(),
+					new \Doctrine\ORM\Tools\Console\Command\GenerateEntitiesCommand(),
+					new \Doctrine\ORM\Tools\Console\Command\GenerateProxiesCommand(),
+					new \Doctrine\ORM\Tools\Console\Command\ConvertMappingCommand(),
+					new \Doctrine\ORM\Tools\Console\Command\RunDqlCommand()
+			));
+			
+			
 		};
 	}
 	
