@@ -1,8 +1,8 @@
 {
-    "name": "pkj/minibase-plugin-doctrineorm",
+    "name": "pkj/minibase-plugin-doctrine",
     "type": "library",
     "description": "Doctrine plugin for minibase. Integrates doctrine with Minibase.",
-    "homepage": "http://github.com/peec/minibase-plugin-twig",
+    "homepage": "http://github.com/peec/minibase-plugin-doctrine",
     "license": "MIT",
     "authors": [
         {
@@ -13,7 +13,7 @@
         }
     ],
     "autoload": {
-        "psr-0": {"Pkj\\Minibase\\Plugin\\TwigPlugin": "src/"}
+        "psr-0": {"Pkj\\Minibase\\Plugin\\DoctrinePlugin": "src/"}
     },
     "require": {
         "php": ">=5.4.0",
