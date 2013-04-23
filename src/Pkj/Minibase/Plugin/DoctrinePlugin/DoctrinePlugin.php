@@ -7,6 +7,12 @@ use Minibase\Plugin\Plugin;
 
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Annotations\AnnotationReader;
+
 
 class DoctrinePlugin extends Plugin{
 	
@@ -32,6 +38,15 @@ class DoctrinePlugin extends Plugin{
 				$setup = Setup::createAnnotationMetadataConfiguration($entityDirs, $this->mb->isDevelopment());
 				break;
 		}
+		$setup->setMetadataDriverImpl(
+				new AnnotationDriver(
+						new CachedReader(
+								new AnnotationReader(),
+								new ArrayCache()
+						),
+						$entityDirs
+				)
+		);
 		
 		$callback = $this->cfg('setupCallback');
 		if ($callback) {
