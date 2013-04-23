@@ -55,4 +55,13 @@ This plugin injects All Doctrine Cli commands to the default minibase commands.
 $this->mb->em->persist(new SomeModel());
 ```
 
+## Events
+
+#### plugin:doctrine:entityDirs (array &$entityDirs)
+
+Listen to this event to add more entity dirs. Useful for other plugins that requires this plugin. Note that `$entityDirs` is a reference.
+
+#### plugin:doctrine:setup (Doctrine\ORM\Configuration $setup)
+
+Listen to this event to configure the configuration for doctrine before entity manager is created.
 
