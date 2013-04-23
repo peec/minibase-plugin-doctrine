@@ -42,6 +42,15 @@ The plugin makes "em" available as a plugin in your MB app.
 
 From any controller:
 
+
+## Using the doctrine CLI
+
+See the [Minibase CLI](https://github.com/peec/minibase/blob/master/docs/command-line.md) documentation on how you generate a php file that can run commands.
+
+This plugin injects All Doctrine Cli commands to the default minibase commands.
+
+
+
 ```php
 $this->mb->em->persist(new SomeModel());
 ```
