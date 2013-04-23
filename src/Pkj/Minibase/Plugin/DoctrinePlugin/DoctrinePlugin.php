@@ -16,6 +16,9 @@ class DoctrinePlugin extends Plugin{
 
 		$metaConfig = $this->cfg('metadata', 'annotation');
 		$entityDirs = $this->cfg('entityDirs');
+		
+		$this->mb->events->trigger("plugin:doctrine:entityDirs", array(&$entityDirs));
+		
 		$conn = $this->cfg('connection');
 		
 		switch($metaConfig) {
@@ -35,6 +38,8 @@ class DoctrinePlugin extends Plugin{
 			$callback = $callback->bindTo($setup);
 			$callback();
 		}
+		
+		$this->mb->events->trigger("plugin:doctrine:setup", array($setup));
 		
 		$this->mb->plugin('em', function () use ($conn, $setup) {
 			
