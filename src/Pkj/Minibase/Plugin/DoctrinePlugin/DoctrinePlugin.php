@@ -1,6 +1,8 @@
 <?php
 namespace Pkj\Minibase\Plugin\DoctrinePlugin;
 
+use Doctrine\ORM\Proxy\Autoloader;
+
 use Symfony\Component\Console\Application;
 
 use Minibase\Plugin\Plugin;
@@ -22,6 +24,15 @@ class DoctrinePlugin extends Plugin{
 
 		$metaConfig = $this->cfg('metadata', 'annotation');
 		$entityDirs = $this->cfg('entityDirs');
+		$proxyDir = $this->cfg('proxyDir');
+		
+		if (!$proxyDir){
+			throw new \Exception ("Doctrine plugin requires 'proxyDir' to be set. Proxy dir is used for caching proxies.");
+		}
+		
+		if (!$entityDirs) {
+			throw new \Exception ("Doctrine plugin requires 'entityDirs' to be set. entityDirs must be an array of path(s) to where Models/Entities are located.");
+		}
 		
 		$this->mb->events->trigger("plugin:doctrine:entityDirs", array(&$entityDirs));
 		
@@ -38,15 +49,23 @@ class DoctrinePlugin extends Plugin{
 				$setup = Setup::createAnnotationMetadataConfiguration($entityDirs, $this->mb->isDevelopment());
 				break;
 		}
+		
+		$setup->setMetadataCacheImpl($this->mb->cache);
+		$setup->setQueryCacheImpl($this->mb->cache);	
 		$setup->setMetadataDriverImpl(
 				new AnnotationDriver(
 						new CachedReader(
 								new AnnotationReader(),
-								new ArrayCache()
+								$this->mb->cache
 						),
 						$entityDirs
 				)
 		);
+		$setup->setProxyDir($proxyDir);
+		
+		$setup->setAutoGenerateProxyClasses($this->mb->isDevelopment());
+		
+		Autoloader::register($proxyDir, "DoctrineProxies");
 		
 		$callback = $this->cfg('setupCallback');
 		if ($callback) {
