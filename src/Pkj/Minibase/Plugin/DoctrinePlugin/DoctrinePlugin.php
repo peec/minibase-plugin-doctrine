@@ -34,6 +34,11 @@ class DoctrinePlugin extends Plugin{
 			throw new \Exception ("Doctrine plugin requires 'entityDirs' to be set. entityDirs must be an array of path(s) to where Models/Entities are located.");
 		}
 		
+		if (!is_dir($proxyDir)) {
+			mkdir($proxyDir);
+		}
+		
+		
 		$this->mb->events->trigger("plugin:doctrine:entityDirs", array(&$entityDirs));
 		
 		$conn = $this->cfg('connection');
@@ -49,6 +54,7 @@ class DoctrinePlugin extends Plugin{
 				$setup = Setup::createAnnotationMetadataConfiguration($entityDirs, $this->mb->isDevelopment());
 				break;
 		}
+		
 		
 		$setup->setMetadataCacheImpl($this->mb->cache);
 		$setup->setQueryCacheImpl($this->mb->cache);	
@@ -85,13 +91,21 @@ class DoctrinePlugin extends Plugin{
 		$this->cliListener = function (Application $console) {
 			$helperSet = new \Symfony\Component\Console\Helper\HelperSet(array(
 				'db' => new \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper($this->mb->em->getConnection()),
-					'em' => new \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper($this->mb->em)
+				'em' => new \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper($this->mb->em),
+				'dialog' => new \Symfony\Component\Console\Helper\DialogHelper()
 			));
 			$console->setHelperSet($helperSet);
 			$console->addCommands(array(
 					// DBAL Commands
 					new \Doctrine\DBAL\Tools\Console\Command\RunSqlCommand(),
 					new \Doctrine\DBAL\Tools\Console\Command\ImportCommand(),
+					
+					new \Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand(),
+					new \Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand(),
+					new \Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand(),
+					new \Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand(),
+					new \Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand(),
+					new \Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand(),
 
 					// ORM Commands
 					new \Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand(),
