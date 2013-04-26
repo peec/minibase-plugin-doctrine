@@ -66,3 +66,43 @@ Listen to this event to add more entity dirs. Useful for other plugins that requ
 
 Listen to this event to configure the configuration for doctrine before entity manager is created.
 
+
+
+
+## Migrations
+
+The best way to keep in track with production database is migrations.
+
+Create `migrations.xml` where your `cli.php` binary is.
+
+Add this (configure it yourself):
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-migrations xmlns="http://doctrine-project.org/schemas/migrations/configuration"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/migrations/configuration
+                    http://doctrine-project.org/schemas/migrations/configuration.xsd">
+
+    <name>App migrations</name>
+
+    <migrations-namespace>app\migrations</migrations-namespace>
+
+    <table name="doctrine_migration_versions" />
+
+    <migrations-directory>app/migrations</migrations-directory>
+
+</doctrine-migrations>
+```
+
+Create your first diff:
+
+```bash
+php cli.php migration:diff
+```
+
+Excecute migrations:
+
+```bash
+php cli.php migrations:migrate
+```
