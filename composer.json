@@ -18,7 +18,7 @@
     "require": {
         "php": ">=5.4.0",
         "minibase/minibase": "dev-master",
-        "doctrine/orm": "*",
-        "doctrine/migrations": "dev-master"
+        "doctrine/orm": "2.*",
+        "doctrine/migrations": "*@dev"
     }
 }
