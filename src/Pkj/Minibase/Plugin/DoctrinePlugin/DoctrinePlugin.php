@@ -89,12 +89,10 @@ class DoctrinePlugin extends Plugin{
 		
 		
 		$this->cliListener = function (Application $console) {
-			$helperSet = new \Symfony\Component\Console\Helper\HelperSet(array(
-				'db' => new \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper($this->mb->em->getConnection()),
-				'em' => new \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper($this->mb->em),
-				'dialog' => new \Symfony\Component\Console\Helper\DialogHelper()
-			));
-			$console->setHelperSet($helperSet);
+			
+			$console->getHelperSet()->set(new \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper($this->mb->em->getConnection()), 'db');
+			$console->getHelperSet()->set(new \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper($this->mb->em), 'em');
+			
 			$console->addCommands(array(
 					// DBAL Commands
 					new \Doctrine\DBAL\Tools\Console\Command\RunSqlCommand(),
